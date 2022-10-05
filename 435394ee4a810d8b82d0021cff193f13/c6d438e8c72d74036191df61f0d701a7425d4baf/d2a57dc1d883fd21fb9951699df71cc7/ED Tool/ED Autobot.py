@@ -34,9 +34,9 @@ import os
 
 # Login
 
-UserAccount = "hB21DCCN399"
+UserAccount = "########"
 
-UserPassword = "12345"
+UserPassword = "#########"
 
 Path = "C:\\Program Files (x86)\\Chrome Driver\\chromedriver.exe"
 
