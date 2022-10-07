@@ -1,3 +1,4 @@
+
 from inspect import _void
 
 from selenium import webdriver
@@ -18,11 +19,15 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 from selenium.common.exceptions import StaleElementReferenceException
 
+from selenium.common.exceptions import InvalidSelectorException
+
 from selenium.common.exceptions import NoSuchElementException
 
 from selenium.common.exceptions import UnexpectedAlertPresentException
 
 from selenium.common.exceptions import TimeoutException
+
+from selenium.common.exceptions import NoSuchAttributeException
 
 from termcolor import colored
 
@@ -34,9 +39,9 @@ import os
 
 # Login
 
-UserAccount = "########"
+UserAccount = "***********"
 
-UserPassword = "#########"
+UserPassword = "12345"
 
 Path = "C:\\Program Files (x86)\\Chrome Driver\\chromedriver.exe"
 
@@ -84,7 +89,6 @@ class Explore:
 
         driver.find_element(
             By.CSS_SELECTOR, ".CTrackerStopBtnE.layout__mediaPlayPause.layout__mediaPlayPause--pause").click()
-
 
 class Practice:
 
@@ -159,12 +163,58 @@ class Practice:
 
         FirstItem.click()
 
-    def SelectQuestion() -> _void:
 
-        FirstSelection = driver.find_element(
-            By.CLASS_NAME, "lessonMultipleCheck")
+    class Select:
 
-        FirstSelection.click()
+        def Question() -> _void:
+
+            FirstSelection = driver.find_element(
+                By.CLASS_NAME, "lessonMultipleCheck")
+
+            FirstSelection.click()
+
+
+        def Word() -> _void:
+
+            Index = 200
+
+            while Index <= 600:
+
+                try:
+
+                    I = driver.find_element(
+                        By.CSS_SELECTOR, f'[class="st {Index} learning__selectTxt_st"]')
+
+                    I.click()
+
+                    break
+
+                except NoSuchElementException:
+
+                    Index += 1
+
+
+        def Sentence() -> _void:
+
+            Index = 200
+
+            while Index <= 600:
+
+                try:
+
+                    I = driver.find_element(
+                        By.CSS_SELECTOR, f'[class="at {Index} learning__addinTxt_at"]')
+
+                    I.click()
+
+                    time.sleep(1)
+
+                    break
+
+                except NoSuchElementException:
+
+                    Index += 1
+
 
     class TypeTextQuestion:
 
@@ -173,7 +223,7 @@ class Practice:
             FirstAudioQuestion = driver.find_element(
                 By.XPATH, "/html/body/app/div/div/section/div/section[2]/div/div[1]/div[3]/ed-la-practicearea/div[2]/ng-component/div/div/div[1]/div/div[1]/div/div/div[2]/textarea")
 
-            FirstAudioQuestion.send_keys("Random words")
+            FirstAudioQuestion.send_keys("Hello, Worlds!")    
 
             time.sleep(0.5)
 
@@ -189,6 +239,8 @@ class Practice:
             time.sleep(1)
 
         def TypeParagraph() -> _void:
+
+            print ("AAAAAAAAAAAAAAAAAAAAAAAA")
 
             time.sleep(4)
 
@@ -216,30 +268,42 @@ class Practice:
 
             time.sleep(0.5)
 
+        def PersonalizeWriting() -> _void:
+
+            driver.find_element(By.CSS_SELECTOR, '[type="text"]').send_keys("Hello, Worlds!")
+
+            time.sleep(0.5)
+
+
     def RerangeType() -> _void:
 
         AllItems = driver.find_elements(By.CSS_SELECTOR, ".dnditem.draggable")
 
         ActionChains(driver).drag_and_drop(AllItems[0], AllItems[1]).perform()
 
+
+
+
     class AudioQuestion:
 
-        def AudioQuestionNormal() -> _void:
+        def NormalAudioQuestion() -> _void:
 
             time.sleep(5)
 
             driver.find_element(
                 By.CSS_SELECTOR, ".button.continue").click()
 
-        def AudioQuestionCharacter() -> _void:
+        def CharacterAudioQuestion() -> _void:
 
-            time.sleep(4)
+            time.sleep(5)
 
             driver.find_element(By.CLASS_NAME, "chooseCaracterArrow").click()
 
             time.sleep(0.5)
 
             driver.find_element(By.CSS_SELECTOR, ".button.continue").click()
+
+
 
     def RerangePictures() -> _void:
 
@@ -248,26 +312,6 @@ class Practice:
         AllItems = driver.find_elements(By.CLASS_NAME, "dnditemImage")
 
         ActionChains(driver).drag_and_drop(AllItems[0], AllItems[1]).perform()
-
-    def SelectSentence() -> _void:
-
-        try:
-
-            driver.find_element(
-                By.XPATH, "/html/body/app/div/div/section/div/section[2]/div/div[1]/div[1]/div/div/div/div/div/div/div/div[2]/p[4]/span[2]/span").click()
-
-        except NoSuchElementException:
-
-            try:
-
-                driver.find_element(
-                    By.XPATH, "/html/body/app/div/div/section/div/section[2]/div/div[1]/div[1]/div/div/div/div/div/div/div[2]/div[1]/span[1]/span/span").click()
-
-            except NoSuchElementException:
-
-                pass
-
-        time.sleep(0.5)
 
     def Speaking() -> _void:
 
@@ -463,7 +507,7 @@ class Test:
                 By.XPATH, "/html/body/app/div/div/section/div/section[2]/div/div[1]/div[3]/ed-la-testresulttools/div/ul/li[2]/a").click()
 
     
-            time.sleep(0.3)
+            time.sleep(0.3) 
 
             ExtractAns = driver.find_elements(By.CLASS_NAME, "dnditem")
 
@@ -471,11 +515,10 @@ class Test:
 
             for item in ExtractAns:
 
-                FinalExtractAns.append(item.text)
+                FinalExtractAns.append(item.get_attribute("ans_id"))
 
             return FinalExtractAns
 
-    
     class DragCorrectAns:
 
         def dnditem_DragCorrectAns(Ans: list) -> _void:
@@ -580,12 +623,12 @@ class Test:
 
             time.sleep(0.5)
 
-    
+
     def RerangeQuestion(Ans: list) -> _void:
 
-         Blanks = driver.find_elements(By.CLASS_NAME, "sequenceZone")
+        Blanks = driver.find_elements(By.CLASS_NAME, "sequenceZone")
 
-         for i in range(len(Blanks)):
+        for i in range(len(Blanks)):
 
             ItemsList = driver.find_elements(By.CSS_SELECTOR, ".dnditem.draggable")
 
@@ -617,8 +660,6 @@ class Other:
 
             isFillBlankQuestion = True
 
-            isSelectQuestion = True
-
             isTypeAudioTextQuestion = True
 
             isRewriteSentence = True
@@ -627,17 +668,32 @@ class Other:
 
             isRerangePictures = True
 
-            isAudioQuestionNormal = True
+            isNormalAudioQuestion = True
 
-            isAudioQuestionCharacter = True
+            isCharacterAudioQuestion = True
 
-            isSelectSentenceQuestion = True
+            isSelectQuestion = True
+
+            isSelectWord = True
+
+            isSelectSentence = True
 
             isTypeParagraph = True
 
             isIntegratedWriting = True
 
             isSpeaking = True
+
+            isPersonalizeWriting = True
+
+            try:
+
+                pass
+
+            except UnexpectedAlertPresentException:
+
+                pass
+
 
             try:
 
@@ -700,20 +756,19 @@ class Other:
 
                 driver.find_element(By.CSS_SELECTOR, ".button.continue")
 
-            except NoSuchElementException:
+                try:
 
-                isAudioQuestionNormal = False
+                    driver.find_element(By.CLASS_NAME, "chooseCaracterArrow")
 
+                except NoSuchElementException:
 
-            try:
-
-                driver.find_element(By.CLASS_NAME, "chooseCaracterArrow")
-
-                isAudioQuestionNormal = False
+                    isCharacterAudioQuestion = False
 
             except NoSuchElementException:
 
-                isAudioQuestionCharacter = False
+                isNormalAudioQuestion = False
+
+                isCharacterAudioQuestion = False
 
             try:
 
@@ -755,11 +810,19 @@ class Other:
 
             try:
 
-                driver.find_element(By.CLASS_NAME, "unSegment")
+                driver.find_element(By.CSS_SELECTOR, ".sentenceNoteWrapper.learning__PAAnswerText.sentenceNoteWrapper--disabled")
 
             except NoSuchElementException:
 
-                isSelectSentenceQuestion = False
+                isSelectWord = False
+
+            try:
+
+                driver.find_element(By.CLASS_NAME, "sentenceNoteWrapper")
+
+            except NoSuchElementException:
+
+                isSelectSentence = False
 
             try:
 
@@ -778,6 +841,17 @@ class Other:
             except NoSuchElementException:
 
                 isSpeaking = False
+
+            try:
+
+                driver.find_element(By.CSS_SELECTOR, ".readingExploreWrapper.postcard")
+
+            except NoSuchElementException:
+
+                isPersonalizeWriting = False
+
+
+
 
             if isRadioQuestion:
                 Practice.ChooseCorrectAns.RadioQuestion()
@@ -801,7 +875,13 @@ class Other:
                 Practice.FillBlankQuestion()
 
             elif isSelectQuestion:
-                Practice.SelectQuestion()
+                Practice.Select.Question()        
+
+            elif isSelectWord:
+                Practice.Select.Word()
+
+            elif isSelectSentence:
+                Practice.Select.Sentence()
 
             elif isTypeAudioTextQuestion:
                 Practice.TypeTextQuestion.TypeAudioTextQuestion()
@@ -809,23 +889,25 @@ class Other:
             elif isTypeParagraph:
                 Practice.TypeTextQuestion.TypeParagraph()
 
-            elif isAudioQuestionNormal:
-                Practice.AudioQuestion.AudioQuestionNormal()
+            elif isNormalAudioQuestion:
+                Practice.AudioQuestion.NormalAudioQuestion()     
 
-            elif isAudioQuestionCharacter:
-                Practice.AudioQuestion.AudioQuestionCharacter()
+            elif isCharacterAudioQuestion:
+                Practice.AudioQuestion.CharacterAudioQuestion()      
 
             elif isRewriteSentence:
                 Practice.TypeTextQuestion.RewriteSentence()
 
-            elif isSelectSentenceQuestion:
-                Practice.SelectSentence()
-
-            elif isIntegratedWriting:
+            elif isIntegratedWriting:                               
                 Practice.TypeTextQuestion.IntegratedWriting()
 
             elif isSpeaking:
                 Practice.Speaking()
+
+            elif isPersonalizeWriting:                             
+                Practice.TypeTextQuestion.PersonalizeWriting()
+
+            time.sleep(0.3)
 
             CurrentTask = driver.find_element(
                 By.XPATH, "/html/body/app/div/div/div[4]/div[3]/div[4]/ed-la-tasksnav/div/div/span[1]").text
@@ -855,7 +937,7 @@ class Other:
         driver.find_element(
             By.CSS_SELECTOR, ".layout__roundBtn.layout__action.btnStartTest").click()
 
-        time.sleep(1.3)
+        time.sleep(1.5)
 
         Test.PassAway()
 
@@ -978,6 +1060,7 @@ class Other:
                     Test.GetAnswer.DragCorrectAns.dnditem_DragToManyColumns())
 
             elif isRerange:
+                print("RERANGEEEEEEEEEE")
                 Key.append(Test.GetAnswer.RerangeQuestion())
 
 
@@ -1065,9 +1148,9 @@ class Other:
         driver.find_element(
             By.XPATH, "/html/body/app/div/div/section/div/section[2]/div/div[1]/div[1]/a").click()   
 
-        time.sleep(0.5)
-
         for sub_ans in Key:
+
+            time.sleep(1)
 
             try:
 
@@ -1244,8 +1327,6 @@ class Other:
                 driver.find_element(
                     By.CSS_SELECTOR, ".tasksBtnext.learning__pnItemLink.learning__nextItemLink").click()
 
-                time.sleep(1)
-
                 # Interact
 
 
@@ -1265,9 +1346,9 @@ WebDriverWait(driver, 7200).until(
 
 Tasks = driver.find_elements(By.CLASS_NAME, "home__details")
 
-UnitNumber = 0
-
-DirectNumber = 2
+UnitNumber = 8
+                                                    #TODO
+DirectNumber = 4
 
 Tasks[UnitNumber].click()
 
@@ -1288,12 +1369,12 @@ WebDriverWait(driver, 7200).until(EC.presence_of_element_located(
 #     (By.CSS_SELECTOR, ".tasksBtnext.learning__pnItemLink.learning__nextItemLink")))
 
 
-# Pick up lesson in unit
+# Pick up lesson in unit                            
 
 driver.find_element(
     By.XPATH, "/html/body/app/div/div/div[1]/ed-la-dropdownlist[1]/section[1]/div[2]").click()
 
-time.sleep(1)
+time.sleep(1)                               
 
 driver.find_element(
     By.XPATH, f"/html/body/app/div/div/div[1]/ed-la-dropdownlist[1]/section[2]/div[2]/div/div[1]/div[{DirectNumber}]/div[1]/div").click()
@@ -1324,19 +1405,19 @@ while True:
 
     print(colored(f"Lesson: {DirectNumber}", "red", "on_red"))
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     if UnitNumber == 8 or UnitNumber == 9:
 
-        DirectNumber = 0
+        StepLesson = DirectNumber
 
-        StepLesson = 1
+        DirectNumber = 1
 
         while StepLesson <= 6:
 
             time.sleep(1)
 
-            StepIndex = 1   
+            StepIndex = 1  
 
             driver.find_element(
                 By.XPATH, "/html/body/app/div/div/div[1]/ed-la-dropdownlist[2]/section[1]/div[2]").click()
@@ -1357,10 +1438,21 @@ while True:
 
                 if StepIndex != StepsCount:
 
-                    driver.find_element(
-                        By.CSS_SELECTOR, ".tasksBtnext.learning__pnItemLink.learning__nextItemLink").click()
+                    try:
+
+                        driver.find_element(By.CSS_SELECTOR, ".learning__taskNavPagerCounterIW.learning__taskNavPagerCounterIW--intro")
+
+                        driver.find_element(
+                            By.CSS_SELECTOR, ".tasksBtnext.learning__pnItemLink.learning__nextItemLink").click()
+                    
+                    except NoSuchElementException:
+
+                        pass
 
                     Other.CrossAway()
+
+                    # driver.find_element(
+                    #     By.CSS_SELECTOR, ".tasksBtnext.learning__pnItemLink.learning__nextItemLink").click()
 
                 else:
 
@@ -1378,7 +1470,7 @@ while True:
 
         while Explore_mode:
 
-            time.sleep(2)
+            time.sleep(2.5)
 
             isWatchVideo = True
 
@@ -1459,8 +1551,6 @@ while True:
 
             isFillBlankQuestion = True
 
-            isSelectQuestion = True
-
             isTypeAudioTextQuestion = True
 
             isRewriteSentence = True
@@ -1469,17 +1559,23 @@ while True:
 
             isRerangePictures = True
 
-            isAudioQuestionNormal = True
+            isNormalAudioQuestion = True
 
-            isAudioQuestionCharacter = True
+            isCharacterAudioQuestion = True
 
-            isSelectSentenceQuestion = True
+            isSelectQuestion = True
+
+            isSelectWord = True
+
+            isSelectSentence = True
 
             isTypeParagraph = True
 
             isIntegratedWriting = True
 
             isSpeaking = True
+
+            isPersonalizeWriting = True
 
             try:
 
@@ -1542,19 +1638,19 @@ while True:
 
                 driver.find_element(By.CSS_SELECTOR, ".button.continue")
 
-            except NoSuchElementException:
+                try:
 
-                isAudioQuestionNormal = False
+                    driver.find_element(By.CLASS_NAME, "chooseCaracterArrow")
 
-            try:
+                except NoSuchElementException:
 
-                driver.find_element(By.CLASS_NAME, "chooseCaracterArrow")
-
-                isAudioQuestionNormal = False
+                    isCharacterAudioQuestion = False
 
             except NoSuchElementException:
 
-                isAudioQuestionCharacter = False
+                isNormalAudioQuestion = False
+
+                isCharacterAudioQuestion = False
 
             try:
 
@@ -1596,11 +1692,20 @@ while True:
 
             try:
 
-                driver.find_element(By.CLASS_NAME, "unSegment")
+                driver.find_element(
+                    By.CSS_SELECTOR, ".sentenceNoteWrapper.learning__PAAnswerText.sentenceNoteWrapper--disabled")
 
             except NoSuchElementException:
 
-                isSelectSentenceQuestion = False
+                isSelectWord = False
+
+            try:
+
+                driver.find_element(By.CLASS_NAME, "sentenceNoteWrapper")
+
+            except NoSuchElementException:
+
+                isSelectSentence = False
 
             try:
 
@@ -1619,6 +1724,15 @@ while True:
             except NoSuchElementException:
 
                 isSpeaking = False
+
+            try:
+
+                driver.find_element(
+                    By.CSS_SELECTOR, ".readingExploreWrapper.postcard")
+
+            except NoSuchElementException:
+
+                isPersonalizeWriting = False
 
             if isRadioQuestion:
                 Practice.ChooseCorrectAns.RadioQuestion()
@@ -1642,7 +1756,13 @@ while True:
                 Practice.FillBlankQuestion()
 
             elif isSelectQuestion:
-                Practice.SelectQuestion()
+                Practice.Select.Question()
+
+            elif isSelectWord:
+                Practice.Select.Word()
+
+            elif isSelectSentence:
+                Practice.Select.Sentence()
 
             elif isTypeAudioTextQuestion:
                 Practice.TypeTextQuestion.TypeAudioTextQuestion()
@@ -1650,23 +1770,23 @@ while True:
             elif isTypeParagraph:
                 Practice.TypeTextQuestion.TypeParagraph()
 
-            elif isAudioQuestionNormal:
-                Practice.AudioQuestion.AudioQuestionNormal()
+            elif isNormalAudioQuestion:
+                Practice.AudioQuestion.NormalAudioQuestion()
 
-            elif isAudioQuestionCharacter:
-                Practice.AudioQuestion.AudioQuestionCharacter()
+            elif isCharacterAudioQuestion:
+                Practice.AudioQuestion.CharacterAudioQuestion()
 
             elif isRewriteSentence:
                 Practice.TypeTextQuestion.RewriteSentence()
-
-            elif isSelectSentenceQuestion:
-                Practice.SelectSentence()
 
             elif isIntegratedWriting:
                 Practice.TypeTextQuestion.IntegratedWriting()
 
             elif isSpeaking:
                 Practice.Speaking()
+
+            elif isPersonalizeWriting:
+                Practice.TypeTextQuestion.PersonalizeWriting()
 
             CurrentTask = driver.find_element(
                 By.XPATH, "/html/body/app/div/div/div[4]/div[3]/div[4]/ed-la-tasksnav/div/div/span[1]").text
@@ -1685,7 +1805,7 @@ while True:
 
         while Test_mode:
 
-            time.sleep(1)
+            time.sleep(0.5)
 
             isTest = True
 
@@ -1898,7 +2018,7 @@ while True:
 
                     print(sub_ans)
 
-                    time.sleep(0.5)
+                    time.sleep(0.7)
 
                     isChooseCorrectAns = True
 
@@ -1970,13 +2090,12 @@ while True:
                         WebDriverWait(driver, 7200).until(EC.presence_of_element_located(
                             (By.XPATH, "/html/body/app/div/div/section/div/section[2]/div/div[1]/div[3]/ed-la-practicearea/div[1]/div[2]/div/div/div[1]/div[2]/div/div[2]")))
 
-
                     else:
 
                         driver.find_element(
                             By.CSS_SELECTOR, ".tasksBtnext.learning__pnItemLink.learning__nextItemLink").click()
 
-                        time.sleep(0.5)
+                        time.sleep(0.3)
 
             elif isInteract_1:
 
@@ -2072,7 +2191,11 @@ while True:
 
             Url = f"/html/body/app/div/div/div[1]/ed-la-dropdownlist[1]/section[2]/div[2]/div/div[1]/div[{DirectNumber - 1}]/div[1]/div"
 
+            time.sleep(0.3)
+            
             driver.find_element(By.XPATH, Url).click()
+
+            time.sleep(0.3)
 
             DirectNumber = 1
 
@@ -2110,7 +2233,6 @@ while True:
 # ProfileButton.click()
 
 # LogoutButton = driver.find_element(By.XPATH, "/html/body/div/div[2]/header/section[2]/div[2]/div/div/ul/li[1]/div/ul/li[5]/a")
-
 # LogoutButton.click()
 
 # WebDriverWait(driver, 7200).until(EC.presence_of_all_elements_located((By.XPATH, "/html/body/div[3]/iframe")))
